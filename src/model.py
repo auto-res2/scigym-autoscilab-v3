@@ -180,7 +180,7 @@ class SimWorker:
     def close(self) -> None:
         try:
             self.conn.send(("quit",))
-            self.proc.join(5)
+            self.proc.join(60)  # 子は終了時に観測記録（.airas の hook）を書く。5 秒では書き終える前に kill して記録が途中で切れた
         except Exception:
             pass
         if self.proc is not None and self.proc.is_alive():

@@ -300,11 +300,14 @@ class Loop:
             if not hyps:
                 log("no valid hypothesis this round")
                 continue
-            for c in hyps:
+            # 遅い系では 1 ラウンドが 15 分を超え、main.py の stall_timeout に「出力が止まった」と見なされて殺されたので、段ごとに出力する
+            for i, c in enumerate(hyps, 1):
                 fit(c, self.obs, rng=self.rng)
+                log(f"round {round_no}: fit {i}/{len(hyps)} error {c.fit_error:.3f}")
             hyps.sort(key=lambda c: c.fit_error)
             leader = hyps[0]
             confidence, refits = bootstrap_confidence(leader, self.obs, n_boot, self.rng)
+            log(f"round {round_no}: confidence {confidence:.2f}")
             refine = confidence >= float(self.cfg["confidence_threshold"])
             if refine and len(refits) >= 2:
                 members = [(leader, p) for p in refits]  # Refine: 本命の再フィット同士が最も割れる点
@@ -314,6 +317,7 @@ class Loop:
             selector = FalsificationSelector(SpeciesOracle(region), dist, n_candidates=int(self.cfg["n_candidates"]),
                                              diversity_weight=float(self.cfg["diversity_weight"]))
             points = selector.select(n=per_iter, rng=self.rng)  # 常に per_iter 点を選び、予算の残りだけ使う
+            log(f"round {round_no}: {len(points)} points selected")
             chosen = points[: budget - self.n_experiments]
             for p in chosen:
                 self.experiment(p)

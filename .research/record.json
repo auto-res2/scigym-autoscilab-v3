@@ -332,7 +332,80 @@
                     "instance_timeout": 14400,
                     "stall_timeout": 900,
                     "seed": 0
-                  }
+                  },
+                  "results": [
+                    {
+                      "id": "37829157667",
+                      "commit": "4b4643a10234941f305b100392bca99a4be500bd",
+                      "eval_inputs": {
+                        "path": ".research/results/autoscilab-luna/eval_inputs/scigym_small.json.gz",
+                        "sha256": "fc2944fe301e0416e83c299849177b22fe4a08b6c46fd0ba21d2d57fef4003b7"
+                      },
+                      "eval_report": {
+                        "task_type": "scigym_small",
+                        "task_signature": "scigym_small/v1@139c6084495c",
+                        "inputs_sha256": "b710c0a0a6dcb2c6e69b0a2894759583938db9699a5b7bb1e423d60f41181a81",
+                        "versions": {
+                          "airas-eval": "0.13.1",
+                          "libroadrunner": "2.7.0",
+                          "python-libsbml": "5.20.4",
+                          "scigym": "0.0.1"
+                        },
+                        "metrics": {
+                          "reaction_f1": 0.45579816213756674,
+                          "reaction_f1_vs_best_published": 0.11749816213756675,
+                          "reaction_f1_with_modifiers": 0.21561145873929766,
+                          "reaction_precision": 0.4506875322568755,
+                          "reaction_precision_with_modifiers": 0.22185515214712292,
+                          "reaction_recall": 0.4795417680454177,
+                          "reaction_recall_with_modifiers": 0.2201367164870814,
+                          "topology_f1": 0.6616113322683839,
+                          "topology_f1_modifier_product": 0.21319821482864962,
+                          "topology_f1_reactant_modifier": 0.10530185394315829,
+                          "topology_f1_reactant_product": 0.32777699962832674,
+                          "topology_precision": 0.7852315871476457,
+                          "topology_recall": 0.6264280725629472,
+                          "trajectory_smape": 0.31246364072150873,
+                          "trajectory_smape_vs_best_published": -0.008736359278491257
+                        },
+                        "inputs_summary": {
+                          "n_instances": 137.0,
+                          "n_valid_submissions": 133.0
+                        },
+                        "skipped": {
+                          "missing_dependency": {},
+                          "missing_optional_input": [],
+                          "not_applicable": {},
+                          "undefined_on_data": {}
+                        }
+                      },
+                      "metrics": {
+                        "reaction_f1": 0.45579816213756674,
+                        "reaction_f1_vs_best_published": 0.11749816213756675,
+                        "reaction_f1_with_modifiers": 0.21561145873929766,
+                        "reaction_precision": 0.4506875322568755,
+                        "reaction_precision_with_modifiers": 0.22185515214712292,
+                        "reaction_recall": 0.4795417680454177,
+                        "reaction_recall_with_modifiers": 0.2201367164870814,
+                        "topology_f1": 0.6616113322683839,
+                        "topology_f1_modifier_product": 0.21319821482864962,
+                        "topology_f1_reactant_modifier": 0.10530185394315829,
+                        "topology_f1_reactant_product": 0.32777699962832674,
+                        "topology_precision": 0.7852315871476457,
+                        "topology_recall": 0.6264280725629472,
+                        "trajectory_smape": 0.31246364072150873,
+                        "trajectory_smape_vs_best_published": -0.008736359278491257,
+                        "n_instances": 137.0,
+                        "n_valid_submissions": 133.0,
+                        "input_tokens": 3281695,
+                        "output_tokens": 1993631,
+                        "mean_experiments": 20.0,
+                        "n_with_submission": 133,
+                        "n_context_overflow": 0,
+                        "n_not_finished": 4
+                      }
+                    }
+                  ]
                 }
               ],
               "quoted_passage_ids": [

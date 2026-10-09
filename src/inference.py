@@ -90,16 +90,19 @@ class TokenCounter:
 
     def wrap(self, completions) -> None:  # noqa: ANN001
         original = completions.create
-        if inspect.iscoroutinefunction(original):
-            async def create(*a, **kw):  # noqa: ANN002, ANN003
-                r = await original(*a, **kw)
-                self._add(r)
-                return r
-        else:
-            def create(*a, **kw):  # noqa: ANN002, ANN003
-                r = original(*a, **kw)
-                self._add(r)
-                return r
+
+        async def counted(coro):  # noqa: ANN001
+            r = await coro
+            self._add(r)
+            return r
+
+        def create(*a, **kw):  # noqa: ANN002, ANN003
+            r = original(*a, **kw)
+            # AsyncCompletions.create は required_args で包まれていて coroutine 関数に見えないので、戻り値で判定する
+            if inspect.iscoroutine(r):
+                return counted(r)
+            self._add(r)
+            return r
         completions.create = create
 
 

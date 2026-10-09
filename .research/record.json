@@ -527,6 +527,40 @@
                       "evidence": "コード: `evaluation/scigym_{split}.json` を `read_text()` しているが、Evaluator の呼び出しは示されていない。"
                     }
                   ]
+                },
+                {
+                  "commit": "4b4643a10234941f305b100392bca99a4be500bd",
+                  "observed": {
+                    "autoscilab-luna": "32be8bf112f00fd6b7af44cf86fd6401ec9afe91030105a9cd2000dabf383c0d"
+                  },
+                  "inputs_sha256": "2c311649887fb7cff7da673b9b4dc4d5f6a17eb83a2f184c5f5f924bd0b08158",
+                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
+                  "findings": [
+                    {
+                      "kind": "undeclared",
+                      "where": "observed: datasets.load.load_dataset.revision",
+                      "statement": "実行時にデータセットの revision を固定せず、取得時点の Hugging Face 上の SciGym-small を実験データとして選んでいる。",
+                      "evidence": "`\"revision\": null`"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/main.py: instance_args / main",
+                      "statement": "3回の試行後も tokens.json が無いタスクは提出なしとして評価入力に含め、平均指標の対象から除外せず不完全モデル扱いにする規則が宣言されていない。",
+                      "evidence": "`submitted.get(p.name)`／`\"n_not_finished\": len(todo) - len(submitted)`"
+                    },
+                    {
+                      "kind": "contradiction",
+                      "where": "design.summary／observed: src.model.SimWorker.__init__.n_points",
+                      "statement": "設計は軌跡を10001時点から間引くとしているが、実行データの時点数はタスクごとに57〜10001であり、固定の10001時点ではない。",
+                      "evidence": "`n_points` の `min: 57, max: 10001`"
+                    },
+                    {
+                      "kind": "unverified",
+                      "where": "src/evaluate.py:main",
+                      "statement": "宣言された airas-eval の公式 Evaluator による採点は、このコードと観測からは確認できず、コードは既存の評価レポートを読み込むだけである。",
+                      "evidence": "`scigym_{split}.json` を `read_text()` して `report[\"metrics\"]` を取り出す"
+                    }
+                  ]
                 }
               ]
             }

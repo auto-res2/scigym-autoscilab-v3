@@ -1000,7 +1000,43 @@
                     "reason": "公式の既定値（s2.p21）"
                   }
                 ]
-              }
+              },
+              "reviews": [
+                {
+                  "commit": "4b4643a10234941f305b100392bca99a4be500bd",
+                  "observed": {
+                    "autoscilab-luna": "32be8bf112f00fd6b7af44cf86fd6401ec9afe91030105a9cd2000dabf383c0d"
+                  },
+                  "inputs_sha256": "87f100d3e2a2973bba5adf88ca45370d554cfa266f0f5b6e38bba12bcf0f8be2",
+                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
+                  "findings": [
+                    {
+                      "kind": "undeclared",
+                      "where": "src/model.py:build_sbml / src/inference.py:Loop.context",
+                      "statement": "反応速度の具体的な数式では、質量作用則の修飾因子は乗算し、Michaelis–Menten/Hill の活性化因子は飽和項、阻害因子は別の抑制項として扱う。",
+                      "evidence": "コード: `terms.append(sid)`、`_saturating(sid, ...)`、`(K / (K + {sid}))`。プロンプト: `activators multiply the rate, inhibitors divide it`"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/model.py:Observations.eps / src/model.py:fit",
+                      "statement": "対数濃度の零値処理には、観測軌跡の種ごとの最大値の 1e-3 に 1e-12 を加えた擬似カウントを用い、フィット初期値は既定値 1（Hill 係数 2）と指定範囲からの一様乱数で決める。",
+                      "evidence": "コード: `return 1e-3 * np.abs(top) + 1e-12`、`new_param(..., 1.0, ...)`、`new_param(..., 2.0, \"hill\")`、`rng.uniform(-6, 6)`"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/model.py:bootstrap_confidence",
+                      "statement": "ブートストラップ標本の重複インデックスを集合で除去してから再フィットするため、重複回数を保持した通常の復元標本とは異なる標本を確信度計算に使う。",
+                      "evidence": "コード: `rng.integers(0, len(obs), len(obs)).tolist()` の結果を `sorted(set(...))` にして `fit(cand, obs, which=rows, ...)` に渡す"
+                    },
+                    {
+                      "kind": "contradiction",
+                      "where": "src/inference.py:TokenCounter._add（observed `__main__.TokenCounter._add.response`）",
+                      "statement": "宣言はトークン数を記録して報告するとしているが、観測された応答は coroutine であり、コードはその `usage` を取得できないため、トークン集計が応答使用量を反映しない。",
+                      "evidence": "宣言: `トークン数も表に出す`。観測: `TokenCounter._add.response` は `ChatCompletion|coroutine`。コード: `usage = getattr(response, \"usage\", None)`"
+                    }
+                  ]
+                }
+              ]
             }
           ],
           "quoted_passage_ids": [

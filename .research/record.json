@@ -486,7 +486,49 @@
                     "reason": "公式の既定値（s2.p21）"
                   }
                 ]
-              }
+              },
+              "reviews": [
+                {
+                  "commit": "4b4643a10234941f305b100392bca99a4be500bd",
+                  "observed": {
+                    "autoscilab-luna": "32be8bf112f00fd6b7af44cf86fd6401ec9afe91030105a9cd2000dabf383c0d"
+                  },
+                  "inputs_sha256": "518dab768425deb9ef3a3869cf1fb353205e3d6dd318965ddf76be7da878c27d",
+                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
+                  "findings": [
+                    {
+                      "kind": "undeclared",
+                      "where": "src/preprocess.py:9 download_split / datasets.load_dataset.revision",
+                      "statement": "取得する SciGym-small データセットのリビジョンが固定されておらず、実際のデータ内容が取得時点に依存する。",
+                      "evidence": "コード: `load_dataset(\"h4duan/scigym-sbml\", split=split)`。観測: `revision` は `null`、読み込んだスナップショットは `dbb10c12a33427e8e05ebbac66de690c65b6acae`。"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/inference.py:Loop.sample_small",
+                      "statement": "エントロピー条件または K_max に達していなくても、サンプリング試行数の上限で候補生成を打ち切る規則がある。",
+                      "evidence": "コード: `for attempt in range(k_max // k + 3)`。宣言された停止条件は「エントロピー変化が 0.1 未満」または「K_max=20」。"
+                    },
+                    {
+                      "kind": "contradiction",
+                      "where": "observed `src.model.SimWorker.__init__.n_points`",
+                      "statement": "宣言は軌跡を 10001 時点から間引くとしているが、実行対象の時点数は一律 10001 ではなく、実装は各対象の実際の時点数から間引いている。",
+                      "evidence": "観測: `n_points` は `57`〜`10001`、最多値は `1001`。コード: `np.linspace(0, self.system.n_points - 1, ...)`。"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/main.py:run_instance / main",
+                      "statement": "所定回数のタイムアウト後に完了しなかった対象は提出なしとして評価入力に含める扱いだが、この失敗時の処理規則は宣言にない。",
+                      "evidence": "コード: `killed after` が3回以上なら再実行を終了し、`submitted.get(p.name)` で未完了対象を `None` として渡す。観測ではデータセット137件に対し `Question.__init__` は133回。"
+                    },
+                    {
+                      "kind": "unverified",
+                      "where": "src/evaluate.py:main",
+                      "statement": "宣言された公式 `scigym_small` Evaluator の実行を行うコードは提示資料内で確認できず、コードは既存の評価レポートを読み込むだけである。",
+                      "evidence": "コード: `evaluation/scigym_{split}.json` を `read_text()` しているが、Evaluator の呼び出しは示されていない。"
+                    }
+                  ]
+                }
+              ]
             }
           ],
           "quoted_passage_ids": [

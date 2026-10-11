@@ -1378,7 +1378,31 @@
                     "reason": "公式の既定値（s2.p21）"
                   }
                 ]
-              }
+              },
+              "reviews": [
+                {
+                  "commit": "ebe753327213ff0934c5d8e582d6d9050f632b69",
+                  "observed": {
+                    "autoscilab-luna": "25dac3d1d978cc3112ff21b87cb5768f1dae264e2b52b5b08296210abc6e4815"
+                  },
+                  "inputs_sha256": "9b6f7e780f3a587515697a00dd869d7d6597680b3a290f4cb05d4327d5194c94",
+                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
+                  "findings": [
+                    {
+                      "kind": "unverified",
+                      "where": "hypothesis h1; claim c1 rationale",
+                      "statement": "この比較だけでは改善を実験選択則に帰属できず、選択則以外の手法差を統制した検証が確認できない。",
+                      "evidence": "src/inference.py: `self.small.complete_json_k(...)`、`fit(c, self.obs, ...)`。src/train.py: `controller.run_benchmark(model=llm)`。"
+                    },
+                    {
+                      "kind": "unverified",
+                      "where": "design d1 summary; src/evaluate.py:main",
+                      "statement": "公式 Evaluator による採点が実行されたことは、提示コードと observed.json から確認できない。",
+                      "evidence": "`report = json.loads((run_dir / \"evaluation\" / f\"scigym_{split}.json\").read_text())`（既存レポートの読み込み）。"
+                    }
+                  ]
+                }
+              ]
             }
           ],
           "quoted_passage_ids": [
@@ -1540,7 +1564,49 @@
                     "reason": "run の yaml で指定するモデル。OpenAI クライアントの create は上流の required_args で包まれていて観測に出ないので、公式 LLM 基底クラスに渡す model_name で確かめる"
                   }
                 ]
-              }
+              },
+              "reviews": [
+                {
+                  "commit": "64fd20a9674382fcff29f45c7d7f62424dceed48",
+                  "observed": {
+                    "react-luna": "795d5e2cc07d30f9c3cea26f8ca0ee03b070e79376d99505d20f77b4eeb3db24"
+                  },
+                  "inputs_sha256": "fa0c34639fa34c4c44ec8ec4164a273ee091e39708ebb6b36641f0b21bbcd3f9",
+                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
+                  "findings": [
+                    {
+                      "kind": "undeclared",
+                      "where": "src/train.py: main / Controller.__init__",
+                      "statement": "ReAct run では `test_memorize=False` を設定しており、モデルの情報アクセス・記憶利用を制限する選択が宣言されていない。",
+                      "evidence": "`test_memorize=False`"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/train.py: main / Controller.__init__",
+                      "statement": "エージェントに渡す実験アクションとカスタム関数のプロンプトとして、指定の2ファイルを選んでいるが、このプロンプト選択は宣言されていない。",
+                      "evidence": "`experiment_actions_path=\"prompts/experiment_actions_perturb.md\"`、`customized_functions_path=\"prompts/customized_functions_sim.md\"`"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "observed: datasets.load.load_dataset revision",
+                      "statement": "SciGym-small のデータ取得でデータセットの revision を固定せず、実行時に選ばれるデータ内容が変わりうる設定だが、宣言に記載がない。",
+                      "evidence": "`\"revision\": {\"value\": null}`"
+                    },
+                    {
+                      "kind": "contradiction",
+                      "where": "src/train.py: OpenAICompatible.get_response",
+                      "statement": "宣言では `max_tokens=32768` とされる一方、応答が長さ上限に達するとリクエスト上限を最大131072まで引き上げる。",
+                      "evidence": "`max_tokens = min(max_tokens * 2, 131072)`"
+                    },
+                    {
+                      "kind": "unverified",
+                      "where": "claim c3 / design.summary evaluator",
+                      "statement": "c3 の RMS（reaction_f1）に関する評価値は、提示されたコード・観測に評価レポートの実行または指標値がなく確認できない。",
+                      "evidence": "`src/main.py` は `eval_inputs` を書き出すが、観測された関数には評価器の実行がない"
+                    }
+                  ]
+                }
+              ]
             }
           ],
           "quoted_passage_ids": [

@@ -8,7 +8,7 @@
   \emph{Criterion:} \texttt{\detokenize{autoscilab-luna}}.\texttt{\detokenize{trajectory_smape}} $-$ \texttt{\detokenize{react-luna}}.\texttt{\detokenize{trajectory_smape}} $\leq -0.02$.
   \emph{Prediction:} $[-0.1, -0.02]$ (同じ openai/gpt-6-luna の公式 ReAct は auto-res2/scigym-frontier-models（137 件、max\_iterations=20）で STE 0.2295 だった。論文は同じ予算で 2–5 倍のサンプル効率（s2.p1）を報告しているが、SBML への翻訳とフィットはこちらのアダプタなので、改善幅は 0.02〜0.10 と控えめに見積もる。).
   \emph{Observed:} 0.0778389.
-  \emph{Verdict:} pending.
+  \emph{Verdict:} refuted.
 \item[\textbf{Claim 2}] 同じループで実験選択だけを仮説と無関係にした autoscilab-nohyp-luna の平均 STE は、autoscilab-luna より 0.01 以上高い。~\cite[s2.p7, s2.p11, s2.p22]{kabra-2026-llm}
   \emph{Rationale:} h1 の「改善は実験選択則によるもの」の部分。論文で最も効いた部品（s2.p7）を外した run との差が出れば、c1 の差が仮説生成やフィットではなく仮説条件付き獲得に帰せられる。
   \emph{Criterion:} \texttt{\detokenize{autoscilab-nohyp-luna}}.\texttt{\detokenize{trajectory_smape}} $-$ \texttt{\detokenize{autoscilab-luna}}.\texttt{\detokenize{trajectory_smape}} $\geq 0.01$.
@@ -20,7 +20,7 @@
   \emph{Criterion:} \texttt{\detokenize{react-luna}}.\texttt{\detokenize{reaction_f1}} $-$ \texttt{\detokenize{autoscilab-luna}}.\texttt{\detokenize{reaction_f1}} $\leq -0.02$.
   \emph{Prediction:} $[-0.15, -0.02]$ (同じ openai/gpt-6-luna の公式 ReAct は auto-res2/scigym-frontier-models で reaction\_f1 0.3594 だった。SciGym 論文 Table 1 の RMS F1（修飾子なし）はモデル間で 0.10〜0.34 の幅（s1.p10）なので、手法の差として 0.02〜0.15 を見積もる。).
   \emph{Observed:} -0.115369.
-  \emph{Verdict:} pending.
+  \emph{Verdict:} supported.
 \end{enumerate}
 \noindent\emph{Assumed, so that the claims together imply Hypothesis 1:}
 \begin{itemize}

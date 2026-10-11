@@ -1106,6 +1106,46 @@
                       "evidence": "宣言: `トークン数も表に出す`。観測: `TokenCounter._add.response` は `ChatCompletion|coroutine`。コード: `usage = getattr(response, \"usage\", None)`"
                     }
                   ]
+                },
+                {
+                  "commit": "ebe753327213ff0934c5d8e582d6d9050f632b69",
+                  "observed": {
+                    "autoscilab-luna": "25dac3d1d978cc3112ff21b87cb5768f1dae264e2b52b5b08296210abc6e4815"
+                  },
+                  "inputs_sha256": "be4dc72c605b945515928bc87e6f92cd24eec93140b6a143466891b33d8c661d",
+                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
+                  "findings": [
+                    {
+                      "kind": "contradiction",
+                      "where": "src/model.py:bootstrap_confidence",
+                      "statement": "宣言は実験のブートストラップ再標本化を述べるが、コードは再抽出で重複した実験を除去してから再フィットするため、重複を保つ通常のブートストラップとは異なる。",
+                      "evidence": "rows = sorted(set(rng.integers(0, len(obs), len(obs)).tolist()))"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/model.py:build_sbml",
+                      "statement": "反応速度式に区画量を乗じる実装上の選択があるが、宣言はこのスケーリングを記載していない。",
+                      "evidence": "terms = [comp] if comp else []"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/model.py:build_sbml",
+                      "statement": "活性化因子・阻害因子の効果を、質量作用では活性化因子との積、阻害では飽和定数を用いた抑制項として実装しているが、その数式上の規則は宣言にない。",
+                      "evidence": "terms.append(sid); ... (K / ({K} + {sid}))"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/model.py:Observations.eps",
+                      "statement": "対数濃度のフィットと食い違い計算に、観測最大値の10⁻³を種ごとの加算値として用いる選択が宣言されていない。",
+                      "evidence": "return 1e-3 * np.abs(top) + 1e-12"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "observed: autoscilab.llm.client.LLMClient.__init__ temperature",
+                      "statement": "largeモデルの温度がnull（クライアント既定）で実行されているが、宣言されたモデル設定に温度の指定がない。",
+                      "evidence": "\"temperature\": {\"value\": null, \"calls\": 137}"
+                    }
+                  ]
                 }
               ]
             }
@@ -1269,7 +1309,37 @@
                     "reason": "run の yaml で指定するモデル"
                   }
                 ]
-              }
+              },
+              "reviews": [
+                {
+                  "commit": "64fd20a9674382fcff29f45c7d7f62424dceed48",
+                  "observed": {
+                    "react-luna": "795d5e2cc07d30f9c3cea26f8ca0ee03b070e79376d99505d20f77b4eeb3db24"
+                  },
+                  "inputs_sha256": "2250339803b4a00259996aed9c7a64e511eb72cb2fdf6076b09c8fa16853166e",
+                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
+                  "findings": [
+                    {
+                      "kind": "undeclared",
+                      "where": "src/train.py:80 Controller.__init__",
+                      "statement": "ReAct 実行では `test_memorize=False` と実験・シミュレーション用プロンプトファイルを明示しており、記録にない情報アクセス制限とモデルへの指示を選んでいる。",
+                      "evidence": "`test_memorize=False`, `experiment_actions_path=\"prompts/experiment_actions_perturb.md\"`, `customized_functions_path=\"prompts/customized_functions_sim.md\"`"
+                    },
+                    {
+                      "kind": "undeclared",
+                      "where": "src/preprocess.py:9 download_split",
+                      "statement": "SciGym-small のデータを HuggingFace から取得する際にデータセットの revision を固定しておらず、取得時点によって実験対象データが変わりうる。",
+                      "evidence": "`load_dataset(\"h4duan/scigym-sbml\", split=split)`"
+                    },
+                    {
+                      "kind": "unverified",
+                      "where": "src.evaluate.main",
+                      "statement": "宣言された airas-eval の `scigym_small` 評価層による採点は、提示コード・観測から実行を確認できない。",
+                      "evidence": "提示された `src/evaluate.py` は既存の `evaluation/scigym_{split}.json` を読み込むだけで、observed の calls に `src.evaluate.main` がない。"
+                    }
+                  ]
+                }
+              ]
             }
           ],
           "quoted_passage_ids": [

@@ -486,83 +486,7 @@
                     "reason": "公式の既定値（s2.p21）"
                   }
                 ]
-              },
-              "reviews": [
-                {
-                  "commit": "4b4643a10234941f305b100392bca99a4be500bd",
-                  "observed": {
-                    "autoscilab-luna": "32be8bf112f00fd6b7af44cf86fd6401ec9afe91030105a9cd2000dabf383c0d"
-                  },
-                  "inputs_sha256": "518dab768425deb9ef3a3869cf1fb353205e3d6dd318965ddf76be7da878c27d",
-                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
-                  "findings": [
-                    {
-                      "kind": "undeclared",
-                      "where": "src/preprocess.py:9 download_split / datasets.load_dataset.revision",
-                      "statement": "取得する SciGym-small データセットのリビジョンが固定されておらず、実際のデータ内容が取得時点に依存する。",
-                      "evidence": "コード: `load_dataset(\"h4duan/scigym-sbml\", split=split)`。観測: `revision` は `null`、読み込んだスナップショットは `dbb10c12a33427e8e05ebbac66de690c65b6acae`。"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "src/inference.py:Loop.sample_small",
-                      "statement": "エントロピー条件または K_max に達していなくても、サンプリング試行数の上限で候補生成を打ち切る規則がある。",
-                      "evidence": "コード: `for attempt in range(k_max // k + 3)`。宣言された停止条件は「エントロピー変化が 0.1 未満」または「K_max=20」。"
-                    },
-                    {
-                      "kind": "contradiction",
-                      "where": "observed `src.model.SimWorker.__init__.n_points`",
-                      "statement": "宣言は軌跡を 10001 時点から間引くとしているが、実行対象の時点数は一律 10001 ではなく、実装は各対象の実際の時点数から間引いている。",
-                      "evidence": "観測: `n_points` は `57`〜`10001`、最多値は `1001`。コード: `np.linspace(0, self.system.n_points - 1, ...)`。"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "src/main.py:run_instance / main",
-                      "statement": "所定回数のタイムアウト後に完了しなかった対象は提出なしとして評価入力に含める扱いだが、この失敗時の処理規則は宣言にない。",
-                      "evidence": "コード: `killed after` が3回以上なら再実行を終了し、`submitted.get(p.name)` で未完了対象を `None` として渡す。観測ではデータセット137件に対し `Question.__init__` は133回。"
-                    },
-                    {
-                      "kind": "unverified",
-                      "where": "src/evaluate.py:main",
-                      "statement": "宣言された公式 `scigym_small` Evaluator の実行を行うコードは提示資料内で確認できず、コードは既存の評価レポートを読み込むだけである。",
-                      "evidence": "コード: `evaluation/scigym_{split}.json` を `read_text()` しているが、Evaluator の呼び出しは示されていない。"
-                    }
-                  ]
-                },
-                {
-                  "commit": "4b4643a10234941f305b100392bca99a4be500bd",
-                  "observed": {
-                    "autoscilab-luna": "32be8bf112f00fd6b7af44cf86fd6401ec9afe91030105a9cd2000dabf383c0d"
-                  },
-                  "inputs_sha256": "2c311649887fb7cff7da673b9b4dc4d5f6a17eb83a2f184c5f5f924bd0b08158",
-                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
-                  "findings": [
-                    {
-                      "kind": "undeclared",
-                      "where": "observed: datasets.load.load_dataset.revision",
-                      "statement": "実行時にデータセットの revision を固定せず、取得時点の Hugging Face 上の SciGym-small を実験データとして選んでいる。",
-                      "evidence": "`\"revision\": null`"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "src/main.py: instance_args / main",
-                      "statement": "3回の試行後も tokens.json が無いタスクは提出なしとして評価入力に含め、平均指標の対象から除外せず不完全モデル扱いにする規則が宣言されていない。",
-                      "evidence": "`submitted.get(p.name)`／`\"n_not_finished\": len(todo) - len(submitted)`"
-                    },
-                    {
-                      "kind": "contradiction",
-                      "where": "design.summary／observed: src.model.SimWorker.__init__.n_points",
-                      "statement": "設計は軌跡を10001時点から間引くとしているが、実行データの時点数はタスクごとに57〜10001であり、固定の10001時点ではない。",
-                      "evidence": "`n_points` の `min: 57, max: 10001`"
-                    },
-                    {
-                      "kind": "unverified",
-                      "where": "src/evaluate.py:main",
-                      "statement": "宣言された airas-eval の公式 Evaluator による採点は、このコードと観測からは確認できず、コードは既存の評価レポートを読み込むだけである。",
-                      "evidence": "`scigym_{split}.json` を `read_text()` して `report[\"metrics\"]` を取り出す"
-                    }
-                  ]
-                }
-              ]
+              }
             }
           ],
           "quoted_passage_ids": [
@@ -1071,83 +995,7 @@
                     "reason": "公式の既定値（s2.p21）"
                   }
                 ]
-              },
-              "reviews": [
-                {
-                  "commit": "4b4643a10234941f305b100392bca99a4be500bd",
-                  "observed": {
-                    "autoscilab-luna": "32be8bf112f00fd6b7af44cf86fd6401ec9afe91030105a9cd2000dabf383c0d"
-                  },
-                  "inputs_sha256": "87f100d3e2a2973bba5adf88ca45370d554cfa266f0f5b6e38bba12bcf0f8be2",
-                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
-                  "findings": [
-                    {
-                      "kind": "undeclared",
-                      "where": "src/model.py:build_sbml / src/inference.py:Loop.context",
-                      "statement": "反応速度の具体的な数式では、質量作用則の修飾因子は乗算し、Michaelis–Menten/Hill の活性化因子は飽和項、阻害因子は別の抑制項として扱う。",
-                      "evidence": "コード: `terms.append(sid)`、`_saturating(sid, ...)`、`(K / (K + {sid}))`。プロンプト: `activators multiply the rate, inhibitors divide it`"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "src/model.py:Observations.eps / src/model.py:fit",
-                      "statement": "対数濃度の零値処理には、観測軌跡の種ごとの最大値の 1e-3 に 1e-12 を加えた擬似カウントを用い、フィット初期値は既定値 1（Hill 係数 2）と指定範囲からの一様乱数で決める。",
-                      "evidence": "コード: `return 1e-3 * np.abs(top) + 1e-12`、`new_param(..., 1.0, ...)`、`new_param(..., 2.0, \"hill\")`、`rng.uniform(-6, 6)`"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "src/model.py:bootstrap_confidence",
-                      "statement": "ブートストラップ標本の重複インデックスを集合で除去してから再フィットするため、重複回数を保持した通常の復元標本とは異なる標本を確信度計算に使う。",
-                      "evidence": "コード: `rng.integers(0, len(obs), len(obs)).tolist()` の結果を `sorted(set(...))` にして `fit(cand, obs, which=rows, ...)` に渡す"
-                    },
-                    {
-                      "kind": "contradiction",
-                      "where": "src/inference.py:TokenCounter._add（observed `__main__.TokenCounter._add.response`）",
-                      "statement": "宣言はトークン数を記録して報告するとしているが、観測された応答は coroutine であり、コードはその `usage` を取得できないため、トークン集計が応答使用量を反映しない。",
-                      "evidence": "宣言: `トークン数も表に出す`。観測: `TokenCounter._add.response` は `ChatCompletion|coroutine`。コード: `usage = getattr(response, \"usage\", None)`"
-                    }
-                  ]
-                },
-                {
-                  "commit": "ebe753327213ff0934c5d8e582d6d9050f632b69",
-                  "observed": {
-                    "autoscilab-luna": "25dac3d1d978cc3112ff21b87cb5768f1dae264e2b52b5b08296210abc6e4815"
-                  },
-                  "inputs_sha256": "be4dc72c605b945515928bc87e6f92cd24eec93140b6a143466891b33d8c661d",
-                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
-                  "findings": [
-                    {
-                      "kind": "contradiction",
-                      "where": "src/model.py:bootstrap_confidence",
-                      "statement": "宣言は実験のブートストラップ再標本化を述べるが、コードは再抽出で重複した実験を除去してから再フィットするため、重複を保つ通常のブートストラップとは異なる。",
-                      "evidence": "rows = sorted(set(rng.integers(0, len(obs), len(obs)).tolist()))"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "src/model.py:build_sbml",
-                      "statement": "反応速度式に区画量を乗じる実装上の選択があるが、宣言はこのスケーリングを記載していない。",
-                      "evidence": "terms = [comp] if comp else []"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "src/model.py:build_sbml",
-                      "statement": "活性化因子・阻害因子の効果を、質量作用では活性化因子との積、阻害では飽和定数を用いた抑制項として実装しているが、その数式上の規則は宣言にない。",
-                      "evidence": "terms.append(sid); ... (K / ({K} + {sid}))"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "src/model.py:Observations.eps",
-                      "statement": "対数濃度のフィットと食い違い計算に、観測最大値の10⁻³を種ごとの加算値として用いる選択が宣言されていない。",
-                      "evidence": "return 1e-3 * np.abs(top) + 1e-12"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "observed: autoscilab.llm.client.LLMClient.__init__ temperature",
-                      "statement": "largeモデルの温度がnull（クライアント既定）で実行されているが、宣言されたモデル設定に温度の指定がない。",
-                      "evidence": "\"temperature\": {\"value\": null, \"calls\": 137}"
-                    }
-                  ]
-                }
-              ]
+              }
             }
           ],
           "quoted_passage_ids": [
@@ -1309,37 +1157,7 @@
                     "reason": "run の yaml で指定するモデル"
                   }
                 ]
-              },
-              "reviews": [
-                {
-                  "commit": "64fd20a9674382fcff29f45c7d7f62424dceed48",
-                  "observed": {
-                    "react-luna": "795d5e2cc07d30f9c3cea26f8ca0ee03b070e79376d99505d20f77b4eeb3db24"
-                  },
-                  "inputs_sha256": "2250339803b4a00259996aed9c7a64e511eb72cb2fdf6076b09c8fa16853166e",
-                  "model": "vercel_ai_gateway/openai/gpt-6-luna",
-                  "findings": [
-                    {
-                      "kind": "undeclared",
-                      "where": "src/train.py:80 Controller.__init__",
-                      "statement": "ReAct 実行では `test_memorize=False` と実験・シミュレーション用プロンプトファイルを明示しており、記録にない情報アクセス制限とモデルへの指示を選んでいる。",
-                      "evidence": "`test_memorize=False`, `experiment_actions_path=\"prompts/experiment_actions_perturb.md\"`, `customized_functions_path=\"prompts/customized_functions_sim.md\"`"
-                    },
-                    {
-                      "kind": "undeclared",
-                      "where": "src/preprocess.py:9 download_split",
-                      "statement": "SciGym-small のデータを HuggingFace から取得する際にデータセットの revision を固定しておらず、取得時点によって実験対象データが変わりうる。",
-                      "evidence": "`load_dataset(\"h4duan/scigym-sbml\", split=split)`"
-                    },
-                    {
-                      "kind": "unverified",
-                      "where": "src.evaluate.main",
-                      "statement": "宣言された airas-eval の `scigym_small` 評価層による採点は、提示コード・観測から実行を確認できない。",
-                      "evidence": "提示された `src/evaluate.py` は既存の `evaluation/scigym_{split}.json` を読み込むだけで、observed の calls に `src.evaluate.main` がない。"
-                    }
-                  ]
-                }
-              ]
+              }
             }
           ],
           "quoted_passage_ids": [
@@ -1350,6 +1168,239 @@
           ],
           "verified": true,
           "verdict": "supported",
+          "criterion": {
+            "metric": "reaction_f1",
+            "subject": "react-luna",
+            "reference": "autoscilab-luna",
+            "op": "<=",
+            "margin": -0.02
+          },
+          "prediction": {
+            "low": -0.15,
+            "high": -0.02,
+            "basis": "同じ openai/gpt-6-luna の公式 ReAct は auto-res2/scigym-frontier-models で reaction_f1 0.3594 だった。SciGym 論文 Table 1 の RMS F1（修飾子なし）はモデル間で 0.10〜0.34 の幅（s1.p10）なので、手法の差として 0.02〜0.15 を見積もる。"
+          }
+        },
+        {
+          "id": "c1",
+          "statement": "SciGym-small 137 件の平均 STE（trajectory_smape）は、LLM-AutoSciLab の SciGym 用ループ（autoscilab-luna）の方が SciGym 公式 ReAct エージェント（react-luna）より 0.02 以上低い。",
+          "rationale": "h1 の中心。同じ主モデル・同じ実験予算・同じ 137 件・同じ公式 Evaluator で、手法だけを替えたときの差が STE に出れば、仮説条件付きの閉ループが SBML の機構回復にも効くという h1 の主張の直接の証拠になる。",
+          "verifier": {
+            "kind": "seyval"
+          },
+          "designs": [
+            {
+              "id": "d1",
+              "summary": "LLM-AutoSciLab の Algorithm 1 を SciGym の反応回復課題に写したループで SciGym-small の各件を解き、提出 SBML を評価層 scigym_small（公式 Evaluator）で採点する。データは Hugging Face の h4duan/scigym-sbml（split small）を run の実行時に取得し、リビジョンは固定しない（run 時点の最新）。採点は src/ の外で行う: Makefile の evaluate 段が airas-eval の評価層 scigym_small（公式 Evaluator を呼ぶ）を実行し、src/evaluate.py はその評価レポート（evaluation/scigym_small.json）の指標に、実験側が数えたトークン数と実験回数を添えて metrics.json に写すだけで、採点の計算は持たない。採点の実行は src/ にも observed.json にも現れない（観測フックは src.main のプロセスにだけ付き、評価は Makefile の evaluate 段の別プロセスで走る）。評価レポート evaluation/scigym_small.json は run の results に残り、record の results[] の eval_report がそれを写す。1 件 1 プロセス（件のプロセスが instance_timeout を超えるか stall_timeout の間出力が止まったら kill して最初からやり直し、API エラーで tokens.json が出なかった件も含めて最大 3 試行。3 試行とも終わらなかった件と文脈長を超えた件は提出なしとして評価層に渡し、不完全モデルで採点する。平均 STE 等の分母からは除外しない。トークン数と実験回数の平均は tokens.json が出た件だけで集計する）、オラクル問い合わせの予算 B=20（最初の 1 回は既定条件の観測、以後は選んだ初期濃度の実験）。各反復: (1) GenHyp — small モデル（meta/llama-3.1-8b）を公式 EnsembleClient.complete_json_k で K=5 ずつ並列サンプルし、不完全モデルに足す反応の集合（反応物・生成物・修飾子・速度則と自由定数。速度則は質量作用・Michaelis–Menten・Hill の 3 型に限る。論文の LLM は自由形式の式を書くので、これは SBML 化のための手法からの逸脱）を候補として得る。候補の反応集合は最大 12 反応。反応集合の骨格（反応物・生成物・修飾子の種集合と速度則の形。定数は含めない。上流の _extract_skeleton と同じ粒度）で束ね、Shannon エントロピーの変化が 0.1 未満になるか K_max=20 に達するまで追加サンプルする（追加サンプルのバッチは K_max/K + 3 = 7 回まで。1 つも JSON にならなかったバッチは 5 秒待って取り直し、回数に数える。Algorithm 2。公式の EnsembleAgent は Python 式の仮説しか解釈しないので、束ね方だけアダプタで同じ規則を書く）。large モデル（openai/gpt-6-luna）を公式 LLMClient.complete_json で呼び、本命 1 つと対抗案 2〜6 個、探索領域（変えてよい種と初期濃度の範囲。提案は許可範囲に切り詰め、無効なら全許可領域）に整理する。large に見せる候補は頻度上位 16 クラスタまで、維持する仮説は最大 8 件、却下済み反応集合は直近 6 件をプロンプトに示す。large の提案が無い・足りないときは small のクラスタで補い、過去の最良候補は仮説集合に残す。LLM に見せる各実験の軌跡は、正解モデルが返す時点列（時点数は件ごとに異なり、SciGym-small では 57〜10001）から等間隔 5 時点に間引く。候補は反応が空でなく、既知の種だけを使い、既定条件でシミュレーションが通るものだけを有効とする。(2) 候補の自由定数を、これまでの実験の濃度時系列に対して scipy で最小二乗フィットする（目的関数は正解モデルの時点列から等間隔 50 時点（時点数が 50 未満なら全時点）に間引いた log 濃度の RMSE、TRF、最大 150 評価、ランダム初期値 1 回の再始動。速度・飽和定数は自然対数で [-20, 20]、Hill 係数は [1, 4] に制限。シミュレーションが落ちた点の残差は 10。候補のシミュレーションにノイズは加えない）。(3) Acquire — 公式 FalsificationSelector.select（n_candidates=2000、diversity_weight=0.3、常に n=4 点を選び、予算の残りが 4 未満なら先頭だけ使う）で実験を選ぶ。オラクル役の BaseOracle は種 id と初期濃度の範囲（既定値の 0.2〜5 倍。既定値が 0 の種は 0〜全種の既定値の中央値）を返すだけ、仮説分布役は候補 SBML を SciGym の Simulator で回し、全種の log 濃度の候補間分散（の平均。時点はフィットと同じ等間隔 50 時点）を返す。(4) 選んだ初期濃度の組を SciGym の Experiment.call_simulator（正解モデル）に投げ、全種の時系列を得る。(5) RefineHyp — 候補を再フィットし、実験を復元抽出して重複を除いた部分集合（n_bootstrap=3 組。上流 learner.py も学習データのランダムな部分集合で再フィットして確信度を出す）で再フィットした予測から、公式 learner.py の定義で確信度を計算する: 予測濃度の変動係数（std / |mean|）の平均を 1 から引き、log 濃度の R² が 0.5 → 0.9 で 0 → 1 になる重みを掛ける。R² が 0.5 以下なら 0。0.9 以上なら Refine モード（ブートストラップ再フィット間で予測が最もばらつく点を選ぶ不確実性サンプリング）に切り替える。正解モデルへの問い合わせは呼び出しの前に予算を 1 消費し、仮説が立たない反復が続いても 2 × 予算回で止める。(6) 予算を使い切ったら、フィット誤差が最小の候補 SBML を提出する。候補が 1 つも妥当な SBML にならなかった件は提出なし（不完全モデルで採点）。 FalsificationSelector が見るオラクル役は BaseOracle のサブクラス（種 id と初期濃度の範囲だけ返す）、仮説分布役は compute_disagreement だけを持つ自前のクラスで、公式の HypothesisDistribution（Python 式専用）は読み込まない。 乱数（実験点の候補サンプリング、フィットの再始動、ブートストラップの再標本化）は params の seed で初期化する。候補 SBML のシミュレーションは件ごとに 1 つ立てる子プロセス（SimWorker）で行う: LLM が出した候補は硬い ODE になりやすく、roadrunner の C ライブラリ内で止まると Python のシグナルでは戻せないので、親がバッチごとの時間切れ（15 秒 + 0.02 秒 × 件数）を検知して子を kill し、そのバッチの結果を失敗（残差 10、食い違いスコア 0）として続行する。子を作り直した回数は tokens.json に sim_worker_restarts として残す。",
+              "runs": [
+                {
+                  "run_id": "autoscilab-luna",
+                  "description": "LLM-AutoSciLab の SciGym 用ループ。large = openai/gpt-6-luna、small = meta/llama-3.1-8b、予算 20、実験選択は仮説の食い違い",
+                  "params": {
+                    "mode": "full",
+                    "method": "autoscilab",
+                    "split": "small",
+                    "large_model": "openai/gpt-6-luna",
+                    "small_model": "meta/llama-3.1-8b",
+                    "base_url": "https://ai-gateway.vercel.sh/v1",
+                    "budget": 20,
+                    "experiments_per_iter": 4,
+                    "acquisition": "disagreement",
+                    "ensemble_k": 5,
+                    "ensemble_k_max": 20,
+                    "ensemble_stability_threshold": 0.1,
+                    "ensemble_temperature": 1,
+                    "ensemble_max_tokens": 4096,
+                    "large_max_tokens": 8192,
+                    "n_candidates": 2000,
+                    "diversity_weight": 0.3,
+                    "confidence_threshold": 0.9,
+                    "n_bootstrap": 3,
+                    "concentration_bounds_factor": [
+                      0.2,
+                      5
+                    ],
+                    "workers": 16,
+                    "instance_timeout": 14400,
+                    "stall_timeout": 900,
+                    "seed": 0
+                  }
+                }
+              ],
+              "quoted_passage_ids": [
+                "s2.p6",
+                "s2.p9",
+                "s2.p10",
+                "s2.p11",
+                "s2.p12",
+                "s2.p13",
+                "s2.p15",
+                "s2.p16",
+                "s2.p19",
+                "s2.p22",
+                "s2.p23",
+                "s2.p24",
+                "s1.p4",
+                "s1.p12"
+              ],
+              "repository_integration": {
+                "repository_id": "s2.r1",
+                "extension_points": [
+                  "autoscilab.oracle.base.BaseOracle"
+                ],
+                "arguments": [
+                  {
+                    "argument": "autoscilab.al.falsification.FalsificationSelector.__init__.n_candidates",
+                    "value": 2000,
+                    "reason": "公式の既定値（s2.p15）。候補 SBML の再シミュレーションは 1 回 0.3〜2 ms なので 2000 点でも 1 件あたり数分に収まる"
+                  },
+                  {
+                    "argument": "autoscilab.al.falsification.FalsificationSelector.__init__.diversity_weight",
+                    "value": 0.3,
+                    "reason": "公式の既定値（s2.p16）"
+                  },
+                  {
+                    "argument": "autoscilab.al.falsification.FalsificationSelector.select.n",
+                    "value": 4,
+                    "reason": "1 反復あたりの実験数。予算 20 の GRN 設定の max_experiments_per_iter=4（s2.p19）に合わせ、5 反復で予算を使い切る"
+                  },
+                  {
+                    "argument": "autoscilab.llm.ensemble_client.EnsembleClient.__init__.model",
+                    "params_key": "small_model",
+                    "reason": "small モデル。論文の Qwen2.5-7B-Instruct（s2.p4、s2.p25）は Vercel に無いので、同じ 7〜8B の dense な instruct モデル meta/llama-3.1-8b"
+                  },
+                  {
+                    "argument": "autoscilab.llm.ensemble_client.EnsembleClient.__init__.base_url",
+                    "params_key": "base_url",
+                    "reason": "Vercel AI Gateway の OpenAI 互換エンドポイント"
+                  },
+                  {
+                    "argument": "autoscilab.llm.ensemble_client.EnsembleClient.__init__.k",
+                    "value": 5,
+                    "reason": "論文の K=5（s2.p9）、公式の既定値（s2.p17）"
+                  },
+                  {
+                    "argument": "autoscilab.llm.ensemble_client.EnsembleClient.__init__.temperature",
+                    "value": 1,
+                    "reason": "論文は 1.0（s2.p13）。公式コードの既定値 0.9（s2.p18）から論文の値に合わせる"
+                  },
+                  {
+                    "argument": "autoscilab.llm.ensemble_client.EnsembleClient.__init__.max_tokens",
+                    "value": 4096,
+                    "reason": "公式の既定値（s2.p20）"
+                  },
+                  {
+                    "argument": "autoscilab.llm.client.LLMClient.__init__.model",
+                    "params_key": "large_model",
+                    "reason": "主モデル。論文の GPT-4o-mini（s2.p4）の代わりに、比較相手の ReAct と同じ openai/gpt-6-luna"
+                  },
+                  {
+                    "argument": "autoscilab.llm.client.LLMClient.__init__.base_url",
+                    "params_key": "base_url",
+                    "reason": "Vercel AI Gateway の OpenAI 互換エンドポイント"
+                  },
+                  {
+                    "argument": "autoscilab.llm.client.LLMClient.__init__.max_completion_tokens",
+                    "value": 8192,
+                    "reason": "公式の既定値（s2.p21）"
+                  }
+                ]
+              }
+            }
+          ],
+          "quoted_passage_ids": [
+            "s2.p1",
+            "s2.p2",
+            "s1.p5",
+            "s1.p10"
+          ],
+          "criterion": {
+            "metric": "trajectory_smape",
+            "subject": "autoscilab-luna",
+            "reference": "react-luna",
+            "op": "<=",
+            "margin": -0.02
+          },
+          "prediction": {
+            "low": -0.1,
+            "high": -0.02,
+            "basis": "同じ openai/gpt-6-luna の公式 ReAct は auto-res2/scigym-frontier-models（137 件、max_iterations=20）で STE 0.2295 だった。論文は同じ予算で 2–5 倍のサンプル効率（s2.p1）を報告しているが、SBML への翻訳とフィットはこちらのアダプタなので、改善幅は 0.02〜0.10 と控えめに見積もる。"
+          }
+        },
+        {
+          "id": "c3",
+          "statement": "SciGym 公式 ReAct エージェント（react-luna）の RMS（修飾子なしの reaction_f1）は、autoscilab-luna より 0.02 以上低い。",
+          "rationale": "h1 の RMS の部分。STE は軌道の近さしか見ないので、反応の構造が実際に回復されているかは RMS で確かめる。react-luna はこの claim の run であると同時に c1 の比較対象でもある。",
+          "verifier": {
+            "kind": "seyval"
+          },
+          "designs": [
+            {
+              "id": "d3",
+              "summary": "SciGym 公式 Controller（max_iterations=20、eval_debug_rounds=3、temperature=1.0、max_tokens=32768）で SciGym-small の 137 件を 1 件 1 プロセスで解かせ、提出モデルを評価層 scigym_small で採点する。採点は src/ の外で行う: Makefile の evaluate 段が airas-eval の評価層 scigym_small（公式 Evaluator を呼ぶ）を実行し、src/evaluate.py はその評価レポートの指標にトークン数と実験回数を添えて metrics.json に写すだけ。採点の実行は src/ にも observed.json にも現れない（観測フックは src.main のプロセスにだけ付き、評価は Makefile の evaluate 段の別プロセスで走る）。評価レポート evaluation/scigym_small.json は run の results に残り、record の results[] の eval_report がそれを写す。LLM は openai/gpt-6-luna を Vercel AI Gateway 経由で呼ぶ OpenAI 互換アダプタ（scigym.api.api.LLM のサブクラス。auto-res2/scigym-integration-check-2 の src/train.py と同じ）。Controller 本体は無改変。",
+              "runs": [
+                {
+                  "run_id": "react-luna",
+                  "description": "SciGym 公式 ReAct エージェント、openai/gpt-6-luna、max_iterations=20",
+                  "params": {
+                    "mode": "full",
+                    "method": "react",
+                    "split": "small",
+                    "model": "openai/gpt-6-luna",
+                    "base_url": "https://ai-gateway.vercel.sh/v1",
+                    "max_iterations": 20,
+                    "eval_debug_rounds": 3,
+                    "temperature": 1,
+                    "max_tokens": 32768,
+                    "workers": 16,
+                    "instance_timeout": 14400,
+                    "stall_timeout": 3600
+                  }
+                }
+              ],
+              "quoted_passage_ids": [
+                "s1.p1",
+                "s1.p2",
+                "s1.p3",
+                "s1.p4",
+                "s1.p11"
+              ],
+              "repository_integration": {
+                "repository_id": "s1.r1",
+                "extension_points": [
+                  "scigym.api.api.LLM"
+                ],
+                "arguments": [
+                  {
+                    "argument": "scigym.controller.Controller.__init__.max_iterations",
+                    "value": 20,
+                    "reason": "論文と同じ 20（s1.p1）。autoscilab-luna のオラクル予算 20 と揃える"
+                  },
+                  {
+                    "argument": "scigym.controller.Controller.__init__.eval_debug_rounds",
+                    "value": 3,
+                    "reason": "論文と同じ 3 回（s1.p2）"
+                  },
+                  {
+                    "argument": "scigym.controller.Controller.__init__.temperature",
+                    "value": 1,
+                    "reason": "SciGym 公式の既定値"
+                  },
+                  {
+                    "argument": "scigym.api.api.LLM.__init__.model_name",
+                    "params_key": "model",
+                    "reason": "run の yaml で指定するモデル。OpenAI クライアントの create は上流の required_args で包まれていて観測に出ないので、公式 LLM 基底クラスに渡す model_name で確かめる"
+                  }
+                ]
+              }
+            }
+          ],
+          "quoted_passage_ids": [
+            "s1.p6",
+            "s1.p10",
+            "s1.p1",
+            "s1.p2"
+          ],
           "criterion": {
             "metric": "reaction_f1",
             "subject": "react-luna",
